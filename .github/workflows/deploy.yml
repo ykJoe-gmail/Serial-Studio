@@ -43,13 +43,13 @@ env:
   QT_VERSION_LINUX: 6.10.2
   QT_VERSION_MACOS: 6.10.2
   QT_VERSION_WINDOWS: 6.10.2
-  EXECUTABLE: "Serial-Studio-Pro"
-  APPLICATION: "Serial Studio Pro"
-  UNIXNAME: "serial-studio-pro"
+  EXECUTABLE: "Serial-Studio-Community"
+  APPLICATION: "Serial Studio Community"
+  UNIXNAME: "serial-studio-community"
   QML_DIR: "../../app/qml"
   PUBLISHER: "Alex Spataru"
   INSTALL_QT_MACOS: false
-  INSTALL_QT_WINDOWS: false
+  INSTALL_QT_WINDOWS: true
   INSTALL_QT_LINUX_INTEL: false
   INSTALL_QT_LINUX_ARM64: false
   QTFRAMEWORK_BYPASS_LICENSE_CHECK: "true"
@@ -61,477 +61,503 @@ env:
 
 jobs:
 
-#-------------------------------------------------------------------------------
-# GNU/Linux build (x86_64)
-#-------------------------------------------------------------------------------
+# #-------------------------------------------------------------------------------
+# # GNU/Linux build (x86_64)
+# #-------------------------------------------------------------------------------
 
-  build-linux:
-    runs-on: ubuntu-22.04
-    name: '🐧 Linux'
-    steps:
-    - name: '🧰 Checkout'
-      uses: actions/checkout@v4
-      with:
-        submodules: 'recursive'
+#   build-linux:
+#     runs-on: ubuntu-22.04
+#     name: '🐧 Linux'
+#     steps:
+#     - name: '🧰 Checkout'
+#       uses: actions/checkout@v4
+#       with:
+#         submodules: 'recursive'
 
-    - name: '⚙️ Install dependencies'
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          build-essential \
-          fakeroot \
-          libcups2-dev \
-          libegl1 \
-          libfuse2 \
-          libgl1-mesa-dev \
-          libasound2-dev \
-          libssl-dev \
-          libudev-dev \
-          libzstd-dev \
-          zlib1g-dev \
-          libexpat1-dev \
-          libminizip-dev \
-          libopus-dev \
-          rpm \
-          libxcb1 \
-          libxcb-cursor0 \
-          libxcb-cursor-dev \
-          libxcb-glx0 \
-          libxcb-icccm4 \
-          libxcb-image0 \
-          libxcb-image0-dev \
-          libxcb-keysyms1 \
-          libxcb-randr0 \
-          libxcb-render0 \
-          libxcb-render-util0 \
-          libxcb-shape0 \
-          libxcb-shm0 \
-          libxcb-sync1 \
-          libxcb-util0-dev \
-          libxcb-util1 \
-          libxcb-xfixes0 \
-          libxcb-xinerama0 \
-          libxcb-xkb-dev \
-          libxcb-xtest0 \
-          libxkbcommon-dev \
-          libxkbcommon-x11-0 \
-          libxkbcommon-x11-dev
+#     - name: '⚙️ Install dependencies'
+#       run: |
+#         sudo apt-get update
+#         sudo apt-get install -y \
+#           build-essential \
+#           fakeroot \
+#           libcups2-dev \
+#           libegl1 \
+#           libfuse2 \
+#           libgl1-mesa-dev \
+#           libasound2-dev \
+#           libssl-dev \
+#           libudev-dev \
+#           libzstd-dev \
+#           zlib1g-dev \
+#           libexpat1-dev \
+#           libminizip-dev \
+#           libopus-dev \
+#           rpm \
+#           libxcb1 \
+#           libxcb-cursor0 \
+#           libxcb-cursor-dev \
+#           libxcb-glx0 \
+#           libxcb-icccm4 \
+#           libxcb-image0 \
+#           libxcb-image0-dev \
+#           libxcb-keysyms1 \
+#           libxcb-randr0 \
+#           libxcb-render0 \
+#           libxcb-render-util0 \
+#           libxcb-shape0 \
+#           libxcb-shm0 \
+#           libxcb-sync1 \
+#           libxcb-util0-dev \
+#           libxcb-util1 \
+#           libxcb-xfixes0 \
+#           libxcb-xinerama0 \
+#           libxcb-xkb-dev \
+#           libxcb-xtest0 \
+#           libxkbcommon-dev \
+#           libxkbcommon-x11-0 \
+#           libxkbcommon-x11-dev
 
-    - name: '⚙️ Restore Qt Cache'
-      uses: actions/cache/restore@v3
-      if: env.INSTALL_QT_LINUX_INTEL == 'false'
-      with:
-        path: |
-          ${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-x64
-          ${{env.USERPROFILE}}/.qt-license
-        key: qt-${{runner.os}}-${{env.QT_VERSION_LINUX}}-x64
+#     - name: '⚙️ Restore Qt Cache'
+#       uses: actions/cache/restore@v3
+#       if: env.INSTALL_QT_LINUX_INTEL == 'false'
+#       with:
+#         path: |
+#           ${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-x64
+#           ${{env.USERPROFILE}}/.qt-license
+#         key: qt-${{runner.os}}-${{env.QT_VERSION_LINUX}}-x64
 
-    - name: '⚙️ Install Qt'
-      shell: bash
-      if: env.INSTALL_QT_LINUX_INTEL == 'true'
-      env:
-        QT_VERSION: ${{env.QT_VERSION_LINUX}}
-        QT_ARCH: x64
-        QT_USERNAME: ${{secrets.QT_USERNAME}}
-        QT_PASSWORD: ${{secrets.QT_PASSWORD}}
-        QT_OUTPUT_DIR: ${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-x64
-      run: |
-        chmod +x ./scripts/install-qt.sh
-        ./scripts/install-qt.sh
+#     - name: '⚙️ Install Qt'
+#       shell: bash
+#       if: env.INSTALL_QT_LINUX_INTEL == 'true'
+#       env:
+#         QT_VERSION: ${{env.QT_VERSION_LINUX}}
+#         QT_ARCH: x64
+#         QT_USERNAME: ${{secrets.QT_USERNAME}}
+#         QT_PASSWORD: ${{secrets.QT_PASSWORD}}
+#         QT_OUTPUT_DIR: ${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-x64
+#       run: |
+#         chmod +x ./scripts/install-qt.sh
+#         ./scripts/install-qt.sh
 
-    - name: '⚙️ Save Qt Cache'
-      if: env.INSTALL_QT_LINUX_INTEL == 'true'
-      uses: actions/cache/save@v3
-      with:
-        path: |
-          ${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-x64
-          ${{env.USERPROFILE}}/.qt-license
-        key: qt-${{runner.os}}-${{env.QT_VERSION_LINUX}}-x64
+#     - name: '⚙️ Save Qt Cache'
+#       if: env.INSTALL_QT_LINUX_INTEL == 'true'
+#       uses: actions/cache/save@v3
+#       with:
+#         path: |
+#           ${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-x64
+#           ${{env.USERPROFILE}}/.qt-license
+#         key: qt-${{runner.os}}-${{env.QT_VERSION_LINUX}}-x64
 
-    - name: '⚙️ Add Qt to PATH'
-      shell: bash
-      env:
-        QT_VERSION: ${{env.QT_VERSION_LINUX}}
-        QT_OUTPUT_DIR: ${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-x64
-      run: |
-        export QT_BIN_PATH="${QT_OUTPUT_DIR}/${QT_VERSION}/gcc_64/bin"
-        export QT_LIBEXEC_PATH="${QT_OUTPUT_DIR}/${QT_VERSION}/gcc_64/libexec"
-        export CMAKE_PREFIX_PATH="${QT_OUTPUT_DIR}/${QT_VERSION}/gcc_64/lib/cmake"
+#     - name: '⚙️ Add Qt to PATH'
+#       shell: bash
+#       env:
+#         QT_VERSION: ${{env.QT_VERSION_LINUX}}
+#         QT_OUTPUT_DIR: ${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-x64
+#       run: |
+#         export QT_BIN_PATH="${QT_OUTPUT_DIR}/${QT_VERSION}/gcc_64/bin"
+#         export QT_LIBEXEC_PATH="${QT_OUTPUT_DIR}/${QT_VERSION}/gcc_64/libexec"
+#         export CMAKE_PREFIX_PATH="${QT_OUTPUT_DIR}/${QT_VERSION}/gcc_64/lib/cmake"
 
-        echo "$QT_BIN_PATH" >> $GITHUB_PATH
-        echo "$QT_LIBEXEC_PATH" >> $GITHUB_PATH
-        echo "CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH" >> $GITHUB_ENV
+#         echo "$QT_BIN_PATH" >> $GITHUB_PATH
+#         echo "$QT_LIBEXEC_PATH" >> $GITHUB_PATH
+#         echo "CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH" >> $GITHUB_ENV
 
-    - name: '⚙️ Install CMake'
-      uses: lukka/get-cmake@latest
-      with:
-        useLocalCache: true
+#     - name: '⚙️ Install CMake'
+#       uses: lukka/get-cmake@latest
+#       with:
+#         useLocalCache: true
 
-    - name: '🚧 Configure with CMake'
-      env:
-        ARCGIS_API_KEY: ${{secrets.ARCGIS_API_KEY}}
-        SERIAL_STUDIO_LICENSE_KEY: ${{secrets.SERIAL_STUDIO_LICENSE_KEY}}
-        SERIAL_STUDIO_INSTANCE_ID: ${{secrets.SERIAL_STUDIO_INSTANCE_ID}}
-      run: |
-        mkdir build
-        cd build
-        cmake ../ \
-          -DPRODUCTION_OPTIMIZATION=ON \
-          -DENABLE_HARDENING=ON \
-          -DCMAKE_BUILD_TYPE=Release \
-          -DBUILD_COMMERCIAL=ON \
-          -DBUILD_GPL3=OFF
+#     - name: '🚧 Configure with CMake'
+#       env:
+#         ARCGIS_API_KEY: ${{secrets.ARCGIS_API_KEY}}
+#         SERIAL_STUDIO_LICENSE_KEY: ${{secrets.SERIAL_STUDIO_LICENSE_KEY}}
+#         SERIAL_STUDIO_INSTANCE_ID: ${{secrets.SERIAL_STUDIO_INSTANCE_ID}}
+#       run: |
+#         mkdir build
+#         cd build
+#         cmake ../ \
+#           -DPRODUCTION_OPTIMIZATION=ON \
+#           -DENABLE_HARDENING=ON \
+#           -DCMAKE_BUILD_TYPE=Release \
+#           -DBUILD_COMMERCIAL=ON \
+#           -DBUILD_GPL3=OFF
 
-    - name: '🚧 Build application'
-      run: |
-        cd build
-        cmake --build . --config Release -j 16
+#     - name: '🚧 Build application'
+#       run: |
+#         cd build
+#         cmake --build . --config Release -j 16
 
-    - name: '📦 Create AppImage'
-      run: |
-        cd "build/app"
-        wget https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20240109-1/linuxdeploy-x86_64.AppImage
-        #wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
-        wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
-        chmod +x linuxdeploy-x86_64.AppImage
-        chmod +x linuxdeploy-plugin-qt-x86_64.AppImage
+#     - name: '📦 Create AppImage'
+#       run: |
+#         cd "build/app"
+#         wget https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20240109-1/linuxdeploy-x86_64.AppImage
+#         #wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+#         wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+#         chmod +x linuxdeploy-x86_64.AppImage
+#         chmod +x linuxdeploy-plugin-qt-x86_64.AppImage
 
-        export QML_SOURCES_PATHS="${{env.QML_DIR}}"
+#         export QML_SOURCES_PATHS="${{env.QML_DIR}}"
+#         export EXTRA_QT_MODULES="webengine"
 
-        ./linuxdeploy-x86_64.AppImage --appdir AppDir -e ${{env.UNIXNAME}} -i ../../app/deploy/linux/${{env.UNIXNAME}}.svg -d ../../app/deploy/linux/${{env.UNIXNAME}}.desktop --plugin qt --output appimage
+#         ./linuxdeploy-x86_64.AppImage --appdir AppDir -e ${{env.UNIXNAME}} -i ../../app/deploy/linux/${{env.UNIXNAME}}.svg -d ../../app/deploy/linux/${{env.UNIXNAME}}.desktop --plugin qt --output appimage
 
-        QT_PLUGINS_PATH="${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-x64/${{env.QT_VERSION_LINUX}}/gcc_64/plugins"
-        mkdir -p AppDir/usr/plugins/canbus
-        if [ -d "$QT_PLUGINS_PATH/canbus" ]; then
-          cp -r "$QT_PLUGINS_PATH/canbus/"* AppDir/usr/plugins/canbus/ || echo "Warning: Could not copy canbus plugins"
-        else
-          echo "Warning: Qt canbus plugins not found at $QT_PLUGINS_PATH/canbus"
-        fi
+        # QT_BASE="${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-x64/${{env.QT_VERSION_LINUX}}/gcc_64"
+        # QT_PLUGINS_PATH="${QT_BASE}/plugins"
 
-        ./linuxdeploy-x86_64.AppImage --appdir AppDir --output appimage
+        # mkdir -p AppDir/usr/plugins/canbus
+        # if [ -d "$QT_PLUGINS_PATH/canbus" ]; then
+        #   cp -r "$QT_PLUGINS_PATH/canbus/"* AppDir/usr/plugins/canbus/ || echo "Warning: Could not copy canbus plugins"
+        # else
+        #   echo "Warning: Qt canbus plugins not found at $QT_PLUGINS_PATH/canbus"
+        # fi
 
-        rm linuxdeploy-x86_64.AppImage
-        rm linuxdeploy-plugin-qt-x86_64.AppImage
+        # mkdir -p AppDir/usr/libexec
+        # cp -f "${QT_BASE}/libexec/QtWebEngineProcess" AppDir/usr/libexec/ || echo "Warning: QtWebEngineProcess not found"
 
-        mv *.AppImage ../../${{env.EXECUTABLE}}-${{env.VERSION}}-Linux-x64.AppImage
+        # mkdir -p AppDir/usr/resources
+        # cp -f "${QT_BASE}/resources/"*.pak AppDir/usr/resources/ 2>/dev/null || echo "Warning: WebEngine .pak files not found"
+        # cp -f "${QT_BASE}/resources/icudtl.dat" AppDir/usr/resources/ 2>/dev/null || true
 
-    - name: '📤 Upload artifact: AppImage'
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{env.EXECUTABLE}}-${{env.VERSION}}-Linux-x64.AppImage
-        path: ${{env.EXECUTABLE}}-${{env.VERSION}}-Linux-x64.AppImage
+        # mkdir -p AppDir/usr/translations/qtwebengine_locales
+        # cp -f "${QT_BASE}/translations/qtwebengine_locales/"*.pak AppDir/usr/translations/qtwebengine_locales/ 2>/dev/null || true
 
-#-------------------------------------------------------------------------------
-# GNU/Linux build (aarch64)
-#-------------------------------------------------------------------------------
+#         ./linuxdeploy-x86_64.AppImage --appdir AppDir --output appimage
 
-  build-linux-arm64:
-    runs-on: ubuntu-24.04-arm
-    name: '🐧 Linux (arm64)'
-    steps:
-    - name: '🧰 Checkout'
-      uses: actions/checkout@v4
-      with:
-        submodules: 'recursive'
+#         rm linuxdeploy-x86_64.AppImage
+#         rm linuxdeploy-plugin-qt-x86_64.AppImage
 
-    - name: '⚙️ Install dependencies'
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          build-essential \
-          fakeroot \
-          libcups2-dev \
-          libegl1 \
-          libfuse2 \
-          libgl1-mesa-dev \
-          libasound2-dev \
-          libssl-dev \
-          libudev-dev \
-          libzstd-dev \
-          zlib1g-dev \
-          libexpat1-dev \
-          libminizip-dev \
-          libopus-dev \
-          rpm \
-          libxcb1 \
-          libxcb-cursor0 \
-          libxcb-cursor-dev \
-          libxcb-glx0 \
-          libxcb-icccm4 \
-          libxcb-image0 \
-          libxcb-image0-dev \
-          libxcb-keysyms1 \
-          libxcb-randr0 \
-          libxcb-render0 \
-          libxcb-render-util0 \
-          libxcb-shape0 \
-          libxcb-shm0 \
-          libxcb-sync1 \
-          libxcb-util0-dev \
-          libxcb-util1 \
-          libxcb-xfixes0 \
-          libxcb-xinerama0 \
-          libxcb-xkb-dev \
-          libxcb-xtest0 \
-          libxkbcommon-dev \
-          libxkbcommon-x11-0 \
-          libxkbcommon-x11-dev
+#         mv *.AppImage ../../${{env.EXECUTABLE}}-${{env.VERSION}}-Linux-x64.AppImage
 
-    - name: '⚙️ Restore Qt Cache'
-      uses: actions/cache/restore@v3
-      if: env.INSTALL_QT_LINUX_ARM64 == 'false'
-      with:
-        path: |
-          ${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-arm64
-        key: qt-${{runner.os}}-${{env.QT_VERSION_LINUX}}-arm64
+#     - name: '📤 Upload artifact: AppImage'
+#       uses: actions/upload-artifact@v4
+#       with:
+#         name: ${{env.EXECUTABLE}}-${{env.VERSION}}-Linux-x64.AppImage
+#         path: ${{env.EXECUTABLE}}-${{env.VERSION}}-Linux-x64.AppImage
 
-    - name: '⚙️ Install Qt'
-      shell: bash
-      if: env.INSTALL_QT_LINUX_ARM64 == 'true'
-      env:
-        QT_VERSION: ${{env.QT_VERSION_LINUX}}
-        QT_ARCH: arm64
-        QT_USERNAME: ${{secrets.QT_USERNAME}}
-        QT_PASSWORD: ${{secrets.QT_PASSWORD}}
-        QT_OUTPUT_DIR: ${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-arm64
-      run: |
-        chmod +x ./scripts/install-qt.sh
-        ./scripts/install-qt.sh
+# #-------------------------------------------------------------------------------
+# # GNU/Linux build (aarch64)
+# #-------------------------------------------------------------------------------
 
-    - name: '⚙️ Save Qt Cache'
-      uses: actions/cache/save@v3
-      if: env.INSTALL_QT_LINUX_ARM64 == 'true'
-      with:
-        path: |
-          ${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-arm64
-        key: qt-${{runner.os}}-${{env.QT_VERSION_LINUX}}-arm64
+#   build-linux-arm64:
+#     runs-on: ubuntu-24.04-arm
+#     name: '🐧 Linux (arm64)'
+#     steps:
+#     - name: '🧰 Checkout'
+#       uses: actions/checkout@v4
+#       with:
+#         submodules: 'recursive'
 
-    - name: '⚙️ Add Qt to PATH'
-      shell: bash
-      env:
-        QT_VERSION: ${{env.QT_VERSION_LINUX}}
-        QT_OUTPUT_DIR: ${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-arm64
-      run: |
-        export QT_BIN_PATH="${QT_OUTPUT_DIR}/${QT_VERSION}/gcc_arm64/bin"
-        export QT_LIBEXEC_PATH="${QT_OUTPUT_DIR}/${QT_VERSION}/gcc_arm64/libexec"
-        export CMAKE_PREFIX_PATH="${QT_OUTPUT_DIR}/${QT_VERSION}/gcc_arm64/lib/cmake"
+#     - name: '⚙️ Install dependencies'
+#       run: |
+#         sudo apt-get update
+#         sudo apt-get install -y \
+#           build-essential \
+#           fakeroot \
+#           libcups2-dev \
+#           libegl1 \
+#           libfuse2 \
+#           libgl1-mesa-dev \
+#           libasound2-dev \
+#           libssl-dev \
+#           libudev-dev \
+#           libzstd-dev \
+#           zlib1g-dev \
+#           libexpat1-dev \
+#           libminizip-dev \
+#           libopus-dev \
+#           rpm \
+#           libxcb1 \
+#           libxcb-cursor0 \
+#           libxcb-cursor-dev \
+#           libxcb-glx0 \
+#           libxcb-icccm4 \
+#           libxcb-image0 \
+#           libxcb-image0-dev \
+#           libxcb-keysyms1 \
+#           libxcb-randr0 \
+#           libxcb-render0 \
+#           libxcb-render-util0 \
+#           libxcb-shape0 \
+#           libxcb-shm0 \
+#           libxcb-sync1 \
+#           libxcb-util0-dev \
+#           libxcb-util1 \
+#           libxcb-xfixes0 \
+#           libxcb-xinerama0 \
+#           libxcb-xkb-dev \
+#           libxcb-xtest0 \
+#           libxkbcommon-dev \
+#           libxkbcommon-x11-0 \
+#           libxkbcommon-x11-dev
 
-        echo "$QT_BIN_PATH" >> $GITHUB_PATH
-        echo "$QT_LIBEXEC_PATH" >> $GITHUB_PATH
-        echo "CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH" >> $GITHUB_ENV
+#     - name: '⚙️ Restore Qt Cache'
+#       uses: actions/cache/restore@v3
+#       if: env.INSTALL_QT_LINUX_ARM64 == 'false'
+#       with:
+#         path: |
+#           ${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-arm64
+#         key: qt-${{runner.os}}-${{env.QT_VERSION_LINUX}}-arm64
 
-    - name: '⚙️ Install CMake'
-      uses: lukka/get-cmake@latest
-      with:
-        useLocalCache: true
+#     - name: '⚙️ Install Qt'
+#       shell: bash
+#       if: env.INSTALL_QT_LINUX_ARM64 == 'true'
+#       env:
+#         QT_VERSION: ${{env.QT_VERSION_LINUX}}
+#         QT_ARCH: arm64
+#         QT_USERNAME: ${{secrets.QT_USERNAME}}
+#         QT_PASSWORD: ${{secrets.QT_PASSWORD}}
+#         QT_OUTPUT_DIR: ${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-arm64
+#       run: |
+#         chmod +x ./scripts/install-qt.sh
+#         ./scripts/install-qt.sh
 
-    - name: '🚧 Configure with CMake'
-      env:
-        ARCGIS_API_KEY: ${{secrets.ARCGIS_API_KEY}}
-        SERIAL_STUDIO_LICENSE_KEY: ${{secrets.SERIAL_STUDIO_LICENSE_KEY}}
-        SERIAL_STUDIO_INSTANCE_ID: ${{secrets.SERIAL_STUDIO_INSTANCE_ID}}
-      run: |
-        mkdir build
-        cd build
-        cmake ../ \
-          -DPRODUCTION_OPTIMIZATION=ON \
-          -DENABLE_HARDENING=ON \
-          -DCMAKE_BUILD_TYPE=Release \
-          -DBUILD_COMMERCIAL=ON \
-          -DBUILD_GPL3=OFF
+#     - name: '⚙️ Save Qt Cache'
+#       uses: actions/cache/save@v3
+#       if: env.INSTALL_QT_LINUX_ARM64 == 'true'
+#       with:
+#         path: |
+#           ${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-arm64
+#         key: qt-${{runner.os}}-${{env.QT_VERSION_LINUX}}-arm64
 
-    - name: '🚧 Build application'
-      run: |
-        cd build
-        cmake --build . --config Release -j 16
+#     - name: '⚙️ Add Qt to PATH'
+#       shell: bash
+#       env:
+#         QT_VERSION: ${{env.QT_VERSION_LINUX}}
+#         QT_OUTPUT_DIR: ${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-arm64
+#       run: |
+#         export QT_BIN_PATH="${QT_OUTPUT_DIR}/${QT_VERSION}/gcc_arm64/bin"
+#         export QT_LIBEXEC_PATH="${QT_OUTPUT_DIR}/${QT_VERSION}/gcc_arm64/libexec"
+#         export CMAKE_PREFIX_PATH="${QT_OUTPUT_DIR}/${QT_VERSION}/gcc_arm64/lib/cmake"
 
-    - name: '📦 Create AppImage'
-      run: |
-        cd "build/app"
-        wget https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20240109-1/linuxdeploy-aarch64.AppImage
-        #wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-aarch64.AppImage
-        wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-aarch64.AppImage
-        chmod +x linuxdeploy-aarch64.AppImage
-        chmod +x linuxdeploy-plugin-qt-aarch64.AppImage
+#         echo "$QT_BIN_PATH" >> $GITHUB_PATH
+#         echo "$QT_LIBEXEC_PATH" >> $GITHUB_PATH
+#         echo "CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH" >> $GITHUB_ENV
 
-        export QML_SOURCES_PATHS="${{env.QML_DIR}}"
+#     - name: '⚙️ Install CMake'
+#       uses: lukka/get-cmake@latest
+#       with:
+#         useLocalCache: true
 
-        ./linuxdeploy-aarch64.AppImage --appdir AppDir -e ${{env.UNIXNAME}} -i ../../app/deploy/linux/${{env.UNIXNAME}}.svg -d ../../app/deploy/linux/${{env.UNIXNAME}}.desktop --plugin qt --output appimage
+#     - name: '🚧 Configure with CMake'
+#       env:
+#         ARCGIS_API_KEY: ${{secrets.ARCGIS_API_KEY}}
+#         SERIAL_STUDIO_LICENSE_KEY: ${{secrets.SERIAL_STUDIO_LICENSE_KEY}}
+#         SERIAL_STUDIO_INSTANCE_ID: ${{secrets.SERIAL_STUDIO_INSTANCE_ID}}
+#       run: |
+#         mkdir build
+#         cd build
+#         cmake ../ \
+#           -DPRODUCTION_OPTIMIZATION=ON \
+#           -DENABLE_HARDENING=ON \
+#           -DCMAKE_BUILD_TYPE=Release \
+#           -DBUILD_COMMERCIAL=ON \
+#           -DBUILD_GPL3=OFF
 
-        QT_PLUGINS_PATH="${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-arm64/${{env.QT_VERSION_LINUX}}/gcc_arm64/plugins"
-        mkdir -p AppDir/usr/plugins/canbus
-        if [ -d "$QT_PLUGINS_PATH/canbus" ]; then
-          cp -r "$QT_PLUGINS_PATH/canbus/"* AppDir/usr/plugins/canbus/ || echo "Warning: Could not copy canbus plugins"
-        else
-          echo "Warning: Qt canbus plugins not found at $QT_PLUGINS_PATH/canbus"
-        fi
+#     - name: '🚧 Build application'
+#       run: |
+#         cd build
+#         cmake --build . --config Release -j 16
 
-        ./linuxdeploy-aarch64.AppImage --appdir AppDir --output appimage
+#     - name: '📦 Create AppImage'
+#       run: |
+#         cd "build/app"
+#         wget https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20240109-1/linuxdeploy-aarch64.AppImage
+#         #wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-aarch64.AppImage
+#         wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-aarch64.AppImage
+#         chmod +x linuxdeploy-aarch64.AppImage
+#         chmod +x linuxdeploy-plugin-qt-aarch64.AppImage
 
-        rm linuxdeploy-aarch64.AppImage
-        rm linuxdeploy-plugin-qt-aarch64.AppImage
+#         export QML_SOURCES_PATHS="${{env.QML_DIR}}"
+#         export EXTRA_QT_MODULES="webengine"
 
-        mv *.AppImage ../../${{env.EXECUTABLE}}-${{env.VERSION}}-Linux-arm64.AppImage
+#         ./linuxdeploy-aarch64.AppImage --appdir AppDir -e ${{env.UNIXNAME}} -i ../../app/deploy/linux/${{env.UNIXNAME}}.svg -d ../../app/deploy/linux/${{env.UNIXNAME}}.desktop --plugin qt --output appimage
 
-    - name: '📤 Upload artifact: AppImage'
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{env.EXECUTABLE}}-${{env.VERSION}}-Linux-arm64.AppImage
-        path: ${{env.EXECUTABLE}}-${{env.VERSION}}-Linux-arm64.AppImage
+        # QT_BASE="${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-arm64/${{env.QT_VERSION_LINUX}}/gcc_arm64"
+        # QT_PLUGINS_PATH="${QT_BASE}/plugins"
 
-#-------------------------------------------------------------------------------
-# macOS build (aarch64 and x86_64)
-#-------------------------------------------------------------------------------
+        # mkdir -p AppDir/usr/plugins/canbus
+        # if [ -d "$QT_PLUGINS_PATH/canbus" ]; then
+        #   cp -r "$QT_PLUGINS_PATH/canbus/"* AppDir/usr/plugins/canbus/ || echo "Warning: Could not copy canbus plugins"
+        # else
+        #   echo "Warning: Qt canbus plugins not found at $QT_PLUGINS_PATH/canbus"
+        # fi
 
-  build-macos:
-    runs-on: macos-latest
-    name: '🍎 macOS'
-    steps:
-    - name: '🧰 Checkout'
-      uses: actions/checkout@v4
-      with:
-        submodules: 'recursive'
+        # mkdir -p AppDir/usr/libexec
+        # cp -f "${QT_BASE}/libexec/QtWebEngineProcess" AppDir/usr/libexec/ || echo "Warning: QtWebEngineProcess not found"
 
-    - name: '⚙️ Install dependencies'
-      run: |
-        brew install expat
+        # mkdir -p AppDir/usr/resources
+        # cp -f "${QT_BASE}/resources/"*.pak AppDir/usr/resources/ 2>/dev/null || echo "Warning: WebEngine .pak files not found"
+        # cp -f "${QT_BASE}/resources/icudtl.dat" AppDir/usr/resources/ 2>/dev/null || true
 
-    - name: '⚙️ Restore Qt Cache'
-      uses: actions/cache/restore@v3
-      if: env.INSTALL_QT_MACOS == 'false'
-      with:
-        path: |
-          ${{github.workspace}}/Qt-${{env.QT_VERSION_MACOS}}-${{runner.os}}-x64
-          ${{env.USERPROFILE}}/.qt-license
-        key: qt-${{runner.os}}-${{env.QT_VERSION_MACOS}}-x64
+        # mkdir -p AppDir/usr/translations/qtwebengine_locales
+        # cp -f "${QT_BASE}/translations/qtwebengine_locales/"*.pak AppDir/usr/translations/qtwebengine_locales/ 2>/dev/null || true
 
-    - name: '⚙️ Install Qt'
-      shell: bash
-      if: env.INSTALL_QT_MACOS == 'true'
-      env:
-        QT_VERSION: ${{env.QT_VERSION_MACOS}}
-        QT_ARCH: x64
-        QT_USERNAME: ${{secrets.QT_USERNAME}}
-        QT_PASSWORD: ${{secrets.QT_PASSWORD}}
-        QT_OUTPUT_DIR: ${{github.workspace}}/Qt-${{env.QT_VERSION_MACOS}}-${{runner.os}}-x64
-      run: |
-        chmod +x ./scripts/install-qt.sh
-        ./scripts/install-qt.sh
+#         ./linuxdeploy-aarch64.AppImage --appdir AppDir --output appimage
 
-    - name: '⚙️ Save Qt Cache'
-      if: env.INSTALL_QT_MACOS == 'true'
-      uses: actions/cache/save@v3
-      with:
-        path: |
-          ${{github.workspace}}/Qt-${{env.QT_VERSION_MACOS}}-${{runner.os}}-x64
-          ${{env.USERPROFILE}}/.qt-license
-        key: qt-${{runner.os}}-${{env.QT_VERSION_MACOS}}-x64
+#         rm linuxdeploy-aarch64.AppImage
+#         rm linuxdeploy-plugin-qt-aarch64.AppImage
 
-    - name: '⚙️ Add Qt to PATH'
-      shell: bash
-      env:
-        QT_VERSION: ${{env.QT_VERSION_MACOS}}
-        QT_OUTPUT_DIR: ${{github.workspace}}/Qt-${{env.QT_VERSION_MACOS}}-${{runner.os}}-x64
-      run: |
-        export QT_BIN_PATH="${QT_OUTPUT_DIR}/${QT_VERSION}/macos/bin"
-        export QT_LIBEXEC_PATH="${QT_OUTPUT_DIR}/${QT_VERSION}/macos/libexec"
-        export CMAKE_PREFIX_PATH="${QT_OUTPUT_DIR}/${QT_VERSION}/macos/lib/cmake"
+#         mv *.AppImage ../../${{env.EXECUTABLE}}-${{env.VERSION}}-Linux-arm64.AppImage
 
-        echo "$QT_BIN_PATH" >> $GITHUB_PATH
-        echo "$QT_LIBEXEC_PATH" >> $GITHUB_PATH
-        echo "CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH" >> $GITHUB_ENV
+#     - name: '📤 Upload artifact: AppImage'
+#       uses: actions/upload-artifact@v4
+#       with:
+#         name: ${{env.EXECUTABLE}}-${{env.VERSION}}-Linux-arm64.AppImage
+#         path: ${{env.EXECUTABLE}}-${{env.VERSION}}-Linux-arm64.AppImage
 
-    - name: '⚙️ Install CMake'
-      uses: lukka/get-cmake@latest
-      with:
-        useLocalCache: true
+# #-------------------------------------------------------------------------------
+# # macOS build (aarch64 and x86_64)
+# #-------------------------------------------------------------------------------
 
-    - name: '⚙️ Install Node'
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
+#   build-macos:
+#     runs-on: macos-latest
+#     name: '🍎 macOS'
+#     steps:
+#     - name: '🧰 Checkout'
+#       uses: actions/checkout@v4
+#       with:
+#         submodules: 'recursive'
 
-    - name: '🚧 Configure with CMake'
-      env:
-        ARCGIS_API_KEY: ${{secrets.ARCGIS_API_KEY}}
-        SERIAL_STUDIO_LICENSE_KEY: ${{secrets.SERIAL_STUDIO_LICENSE_KEY}}
-        SERIAL_STUDIO_INSTANCE_ID: ${{secrets.SERIAL_STUDIO_INSTANCE_ID}}
-      run: |
-        mkdir build
-        cd build
-        cmake ../ \
-          -DPRODUCTION_OPTIMIZATION=ON \
-          -DENABLE_HARDENING=ON \
-          -DCMAKE_BUILD_TYPE=Release \
-          -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0 \
-          -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" \
-          -DBUILD_COMMERCIAL=ON \
-          -DBUILD_GPL3=OFF
+#     - name: '⚙️ Install dependencies'
+#       run: |
+#         brew install expat
 
-    - name: '🚧 Build application'
-      run: |
-        cd build
-        cmake --build . --config Release -j 16
+#     - name: '⚙️ Restore Qt Cache'
+#       uses: actions/cache/restore@v3
+#       if: env.INSTALL_QT_MACOS == 'false'
+#       with:
+#         path: |
+#           ${{github.workspace}}/Qt-${{env.QT_VERSION_MACOS}}-${{runner.os}}-x64
+#           ${{env.USERPROFILE}}/.qt-license
+#         key: qt-${{runner.os}}-${{env.QT_VERSION_MACOS}}-x64
 
-    - name: '📦 Package application'
-      run: |
-        cd build
-        cpack --verbose
+#     - name: '⚙️ Install Qt'
+#       shell: bash
+#       if: env.INSTALL_QT_MACOS == 'true'
+#       env:
+#         QT_VERSION: ${{env.QT_VERSION_MACOS}}
+#         QT_ARCH: x64
+#         QT_USERNAME: ${{secrets.QT_USERNAME}}
+#         QT_PASSWORD: ${{secrets.QT_PASSWORD}}
+#         QT_OUTPUT_DIR: ${{github.workspace}}/Qt-${{env.QT_VERSION_MACOS}}-${{runner.os}}-x64
+#       run: |
+#         chmod +x ./scripts/install-qt.sh
+#         ./scripts/install-qt.sh
 
-    - name: '🪪 Import Certificates'
-      uses: alex-spataru/import-codesign-certs@v4
-      with:
-        p12-file-base64: ${{secrets.APPLE_CERTIFICATES_P12}}
-        p12-password: ${{secrets.APPLE_CERTIFICATES_P12_PASSWORD}}
+#     - name: '⚙️ Save Qt Cache'
+#       if: env.INSTALL_QT_MACOS == 'true'
+#       uses: actions/cache/save@v3
+#       with:
+#         path: |
+#           ${{github.workspace}}/Qt-${{env.QT_VERSION_MACOS}}-${{runner.os}}-x64
+#           ${{env.USERPROFILE}}/.qt-license
+#         key: qt-${{runner.os}}-${{env.QT_VERSION_MACOS}}-x64
 
-    - name: '💿 Mount DMG and copy application'
-      run: |
-        VOLUME=$(yes | hdiutil attach ./build/*.dmg -nobrowse | grep "Volumes" | awk '{print $3}')
-        cp -a "$VOLUME/${{env.EXECUTABLE}}.app" "${{env.APPLICATION}}.app"
-        hdiutil detach "$VOLUME"
+#     - name: '⚙️ Add Qt to PATH'
+#       shell: bash
+#       env:
+#         QT_VERSION: ${{env.QT_VERSION_MACOS}}
+#         QT_OUTPUT_DIR: ${{github.workspace}}/Qt-${{env.QT_VERSION_MACOS}}-${{runner.os}}-x64
+#       run: |
+#         export QT_BIN_PATH="${QT_OUTPUT_DIR}/${QT_VERSION}/macos/bin"
+#         export QT_LIBEXEC_PATH="${QT_OUTPUT_DIR}/${QT_VERSION}/macos/libexec"
+#         export CMAKE_PREFIX_PATH="${QT_OUTPUT_DIR}/${QT_VERSION}/macos/lib/cmake"
 
-    - name: '✍🏻 Sign Application with Entitlements'
-      run: |
-        codesign --force --deep --options runtime \
-          --entitlements "${GITHUB_WORKSPACE}/app/deploy/macOS/Serial-Studio.entitlements" \
-          --sign "${{secrets.APPLE_APPID_TEAM_ID}}" \
-          "${{env.APPLICATION}}.app"
+#         echo "$QT_BIN_PATH" >> $GITHUB_PATH
+#         echo "$QT_LIBEXEC_PATH" >> $GITHUB_PATH
+#         echo "CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH" >> $GITHUB_ENV
 
-    - name: '💽 Create nice DMG'
-      run: |
-        npm install --global create-dmg
-        rm LICENSE.md
-        create-dmg "${{env.APPLICATION}}.app" --dmg-title="${{env.APPLICATION}}"
-        mv "${{env.APPLICATION}} ${{env.VERSION}}.dmg" "${{env.EXECUTABLE}}-${{env.VERSION}}-macOS.dmg"
+#     - name: '⚙️ Install CMake'
+#       uses: lukka/get-cmake@latest
+#       with:
+#         useLocalCache: true
 
-    - name: '📋 Notarize'
-      shell: bash
-      env:
-        PRODUCT_PATH: ${{env.EXECUTABLE}}-${{env.VERSION}}-macOS.dmg
-        APPLE_ID: ${{secrets.APPLE_NOTARIZATION_USERNAME}}
-        APP_PASSWORD: ${{secrets.APPLE_NOTARIZATION_PASSWORD}}
-        TEAM_ID: ${{secrets.APPLE_NOTARIZATION_TEAMID}}
-      run: |
-        echo "Submitting $PRODUCT_PATH for notarization..."
-        xcrun notarytool submit "$PRODUCT_PATH" \
-          --apple-id "$APPLE_ID" \
-          --password "$APP_PASSWORD" \
-          --team-id "$TEAM_ID" \
-          --wait \
-          --output-format json
+#     - name: '⚙️ Install Node'
+#       uses: actions/setup-node@v4
+#       with:
+#         node-version: 20
 
-    - name: '📌 Staple'
-      shell: bash
-      run: |
-        PRODUCT="${{env.EXECUTABLE}}-${{env.VERSION}}-macOS.dmg"
-        echo "Stapling $PRODUCT..."
-        xcrun stapler staple "$PRODUCT"
+#     - name: '🚧 Configure with CMake'
+#       env:
+#         ARCGIS_API_KEY: ${{secrets.ARCGIS_API_KEY}}
+#         SERIAL_STUDIO_LICENSE_KEY: ${{secrets.SERIAL_STUDIO_LICENSE_KEY}}
+#         SERIAL_STUDIO_INSTANCE_ID: ${{secrets.SERIAL_STUDIO_INSTANCE_ID}}
+#       run: |
+#         mkdir build
+#         cd build
+#         cmake ../ \
+#           -DPRODUCTION_OPTIMIZATION=ON \
+#           -DENABLE_HARDENING=ON \
+#           -DCMAKE_BUILD_TYPE=Release \
+#           -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0 \
+#           -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" \
+#           -DBUILD_COMMERCIAL=ON \
+#           -DBUILD_GPL3=OFF
 
-    - name: '📤 Upload artifact: DMG'
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{env.EXECUTABLE}}-${{env.VERSION}}-macOS.dmg
-        path: ${{env.EXECUTABLE}}-${{env.VERSION}}-macOS.dmg
+#     - name: '🚧 Build application'
+#       run: |
+#         cd build
+#         cmake --build . --config Release -j 16
+
+#     - name: '📦 Package application'
+#       run: |
+#         cd build
+#         cpack --verbose
+
+#     - name: '🪪 Import Certificates'
+#       uses: alex-spataru/import-codesign-certs@v4
+#       with:
+#         p12-file-base64: ${{secrets.APPLE_CERTIFICATES_P12}}
+#         p12-password: ${{secrets.APPLE_CERTIFICATES_P12_PASSWORD}}
+
+#     - name: '💿 Mount DMG and copy application'
+#       run: |
+#         VOLUME=$(yes | hdiutil attach ./build/*.dmg -nobrowse | grep "Volumes" | awk '{print $3}')
+#         cp -a "$VOLUME/${{env.EXECUTABLE}}.app" "${{env.APPLICATION}}.app"
+#         hdiutil detach "$VOLUME"
+
+#     - name: '✍🏻 Sign Application with Entitlements'
+#       run: |
+#         codesign --force --deep --options runtime \
+#           --entitlements "${GITHUB_WORKSPACE}/app/deploy/macOS/Serial-Studio.entitlements" \
+#           --sign "${{secrets.APPLE_APPID_TEAM_ID}}" \
+#           "${{env.APPLICATION}}.app"
+
+#     - name: '💽 Create nice DMG'
+#       run: |
+#         npm install --global create-dmg
+#         rm LICENSE.md
+#         create-dmg "${{env.APPLICATION}}.app" --dmg-title="${{env.APPLICATION}}"
+#         mv "${{env.APPLICATION}} ${{env.VERSION}}.dmg" "${{env.EXECUTABLE}}-${{env.VERSION}}-macOS.dmg"
+
+#     - name: '📋 Notarize'
+#       shell: bash
+#       env:
+#         PRODUCT_PATH: ${{env.EXECUTABLE}}-${{env.VERSION}}-macOS.dmg
+#         APPLE_ID: ${{secrets.APPLE_NOTARIZATION_USERNAME}}
+#         APP_PASSWORD: ${{secrets.APPLE_NOTARIZATION_PASSWORD}}
+#         TEAM_ID: ${{secrets.APPLE_NOTARIZATION_TEAMID}}
+#       run: |
+#         echo "Submitting $PRODUCT_PATH for notarization..."
+#         xcrun notarytool submit "$PRODUCT_PATH" \
+#           --apple-id "$APPLE_ID" \
+#           --password "$APP_PASSWORD" \
+#           --team-id "$TEAM_ID" \
+#           --wait \
+#           --output-format json
+
+#     - name: '📌 Staple'
+#       shell: bash
+#       run: |
+#         PRODUCT="${{env.EXECUTABLE}}-${{env.VERSION}}-macOS.dmg"
+#         echo "Stapling $PRODUCT..."
+#         xcrun stapler staple "$PRODUCT"
+
+#     - name: '📤 Upload artifact: DMG'
+#       uses: actions/upload-artifact@v4
+#       with:
+#         name: ${{env.EXECUTABLE}}-${{env.VERSION}}-macOS.dmg
+#         path: ${{env.EXECUTABLE}}-${{env.VERSION}}-macOS.dmg
 
 #-------------------------------------------------------------------------------
 # Windows build (MSVC 2022 x86_64)
@@ -617,8 +643,8 @@ jobs:
           -DPRODUCTION_OPTIMIZATION=ON `
           -DENABLE_HARDENING=ON `
           -DCMAKE_BUILD_TYPE=Release `
-          -DBUILD_COMMERCIAL=ON `
-          -DBUILD_GPL3=OFF
+          -DBUILD_COMMERCIAL=OFF `
+          -DBUILD_GPL3=ON
 
     - name: '🚧 Build application'
       run: |
@@ -689,12 +715,15 @@ jobs:
   upload:
     name: '🗂 Create release and upload artifacts'
     needs:
-      - build-macos
-      - build-linux
+      # - build-macos
+      # - build-linux
       - build-windows
-      - build-linux-arm64
+      # - build-linux-arm64
 
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
     env:
       RELEASE_TAG: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') && github.ref_name || 'continuous' }}
 
@@ -724,8 +753,11 @@ jobs:
           allowUpdates: true
           replacesArtifacts: true
           name: 'Continuous Build'
+          # artifacts: |
+          #   artifacts/*.AppImage
+          #   artifacts/*.dmg
+          #   artifacts/*.msi
+          #   artifacts/*.zip
           artifacts: |
-            artifacts/*.AppImage
-            artifacts/*.dmg
             artifacts/*.msi
             artifacts/*.zip
