@@ -627,15 +627,39 @@ jobs:
       with:
         arch: x64
 
+    - name: '🔍 Debug: Check Qt Directory Structure'
+      shell: pwsh
+      run: |
+        # 1. 打印当前环境变量中的路径
+        Write-Host "--- Environment Variables ---"
+        Write-Host "CMAKE_PREFIX_PATH: $env:CMAKE_PREFIX_PATH"
+        
+        # 2. 定义预期的 Qt 根目录
+        $EXPECTED_ROOT = "${{ github.workspace }}/Qt-${{ env.QT_VERSION_WINDOWS }}-Windows-x64"
+        Write-Host "--- Checking Directory: $EXPECTED_ROOT ---"
+        
+        # 3. 检查目录是否存在并列出文件（递归 3 层）
+        if (Test-Path $EXPECTED_ROOT) {
+            Write-Host "✅ Root directory exists!"
+            # 列出该目录下的所有子目录，看看 6.10.2 在哪
+            Get-ChildItem -Path $EXPECTED_ROOT -Recurse -Depth 3 | Select-Object FullName
+        } else {
+            Write-Host "❌ Root directory NOT FOUND at $EXPECTED_ROOT"
+            # 如果没找到，看看 workspace 下到底有什么
+            Write-Host "Contents of workspace:"
+            Get-ChildItem -Path ${{ github.workspace }}
+        }
+
     - name: '🚧 Configure with CMake'
       env:
         ARCGIS_API_KEY: ${{secrets.ARCGIS_API_KEY}}
         SERIAL_STUDIO_LICENSE_KEY: ${{secrets.SERIAL_STUDIO_LICENSE_KEY}}
         SERIAL_STUDIO_INSTANCE_ID: ${{secrets.SERIAL_STUDIO_INSTANCE_ID}}
+        CMAKE_CONFIG_LOG: "1"
       run: |
         mkdir build
         cd build
-        cmake ../ `
+        cmake ../ --debug-find`
           -DCMAKE_CXX_COMPILER=cl `
           -DCMAKE_C_COMPILER=cl `
           -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake" `
