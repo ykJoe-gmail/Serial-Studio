@@ -152,16 +152,7 @@ jobs:
           -m qtcharts qt5compat qtmultimedia qtserialport qtgraphs qtpositioning \
              qtquick3d qtshadertools qtconnectivity qtwebengine qtwebchannel qtpdf
 
-    - name: '⚙️ Save Qt Cache'
-      if: env.INSTALL_QT_LINUX_INTEL == 'true'
-      uses: actions/cache/save@v3
-      with:
-        path: |
-          ${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-x64
-          ${{env.USERPROFILE}}/.qt-license
-        key: qt-${{runner.os}}-${{env.QT_VERSION_LINUX}}-x64
-
-    - name: '🔍 Debug: Find Qt6Config.cmake (Linux)'
+      - name: '🔍 Debug: Find Qt6Config.cmake (Linux)'
       shell: bash
       if: env.INSTALL_QT_LINUX_INTEL == 'true'
       run: |
@@ -174,6 +165,15 @@ jobs:
         
         echo "--- 📂 Directory Tree (Depth 4) ---"
         find ${{ github.workspace }} -maxdepth 4 -not -path '*/.*'
+
+    - name: '⚙️ Save Qt Cache'
+      if: env.INSTALL_QT_LINUX_INTEL == 'true'
+      uses: actions/cache/save@v3
+      with:
+        path: |
+          ${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-x64
+          ${{env.USERPROFILE}}/.qt-license
+        key: qt-${{runner.os}}-${{env.QT_VERSION_LINUX}}-x64
 
     - name: '⚙️ Add Qt to PATH'
       shell: bash
@@ -495,15 +495,6 @@ jobs:
           -m qtcharts qt5compat qtmultimedia qtserialport qtgraphs qtpositioning \
              qtquick3d qtshadertools qtconnectivity qtwebengine qtwebchannel qtpdf
 
-    - name: '⚙️ Save Qt Cache'
-      if: env.INSTALL_QT_MACOS == 'true'
-      uses: actions/cache/save@v3
-      with:
-        path: |
-          ${{github.workspace}}/Qt-${{env.QT_VERSION_MACOS}}-${{runner.os}}-x64
-          ${{env.USERPROFILE}}/.qt-license
-        key: qt-${{runner.os}}-${{env.QT_VERSION_MACOS}}-x64
-
     - name: '🔍 Debug: Find Qt6Config.cmake (macOS)'
       shell: bash
       if: env.INSTALL_QT_MACOS == 'true'
@@ -515,6 +506,15 @@ jobs:
         echo "--- 📂 Directory Tree (Depth 4) ---"
         find ${{ github.workspace }} -maxdepth 4 -not -path '*/.*'
 
+    - name: '⚙️ Save Qt Cache'
+      if: env.INSTALL_QT_MACOS == 'true'
+      uses: actions/cache/save@v3
+      with:
+        path: |
+          ${{github.workspace}}/Qt-${{env.QT_VERSION_MACOS}}-${{runner.os}}-x64
+          ${{env.USERPROFILE}}/.qt-license
+        key: qt-${{runner.os}}-${{env.QT_VERSION_MACOS}}-x64
+        
     - name: '⚙️ Add Qt to PATH'
       shell: bash
       env:
