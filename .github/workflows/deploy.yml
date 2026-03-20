@@ -144,18 +144,13 @@ jobs:
       if: env.INSTALL_QT_LINUX_INTEL == 'true'
       run: |
         pip install aqtinstall
-        QT_ROOT="${{ github.workspace }}/qt"
+        # 强制指定为你的环境变量定义的路径
+        QT_ROOT="${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-x64"
         mkdir -p "$QT_ROOT"
         
-        # 1. 安装 Qt
         aqt install-qt linux desktop 6.10.2 gcc_64 --outputdir "$QT_ROOT" \
           -m qtcharts qt5compat qtmultimedia qtserialport qtgraphs qtpositioning \
              qtquick3d qtshadertools qtconnectivity qtwebengine qtwebchannel qtpdf
-        
-        # 2. 核心黑科技：建立系统级软链接
-        # 将我们安装目录下的所有 CMake 配置，映射到 CMake 默认搜索路径
-        sudo mkdir -p /usr/local/lib/cmake
-        sudo ln -s $QT_ROOT/6.10.2/gcc_64/lib/cmake/* /usr/local/lib/cmake/
 
     - name: '⚙️ Save Qt Cache'
       if: env.INSTALL_QT_LINUX_INTEL == 'true'
@@ -334,18 +329,12 @@ jobs:
       if: env.INSTALL_QT_LINUX_ARM64 == 'true'
       run: |
         pip install aqtinstall
-        QT_ROOT="${{ github.workspace }}/qt"
+        QT_ROOT="${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-arm64"
         mkdir -p "$QT_ROOT"
         
-        # 1. 安装 Qt
         aqt install-qt linux desktop 6.10.2 gcc_arm64 --outputdir "$QT_ROOT" \
           -m qtcharts qt5compat qtmultimedia qtserialport qtgraphs qtpositioning \
              qtquick3d qtshadertools qtconnectivity qtwebengine qtwebchannel qtpdf
-        
-        # 2. 核心黑科技：建立系统级软链接
-        # 将我们安装目录下的所有 CMake 配置，映射到 CMake 默认搜索路径
-        sudo mkdir -p /usr/local/lib/cmake
-        sudo ln -s $QT_ROOT/6.10.2/gcc_arm64/lib/cmake/* /usr/local/lib/cmake/
 
     - name: '⚙️ Save Qt Cache'
       uses: actions/cache/save@v3
@@ -485,16 +474,12 @@ jobs:
       if: env.INSTALL_QT_MACOS == 'true'
       run: |
         pip install aqtinstall
-        QT_ROOT="${{ github.workspace }}/qt"
+        QT_ROOT="${{github.workspace}}/Qt-${{env.QT_VERSION_MACOS}}-${{runner.os}}-x64"
         mkdir -p "$QT_ROOT"
         
         aqt install-qt macos desktop 6.10.2 clang_64 --outputdir "$QT_ROOT" \
           -m qtcharts qt5compat qtmultimedia qtserialport qtgraphs qtpositioning \
              qtquick3d qtshadertools qtconnectivity qtwebengine qtwebchannel qtpdf
-        
-        # macOS 映射路径
-        sudo mkdir -p /usr/local/lib/cmake
-        sudo ln -s $QT_ROOT/6.10.2/macos/lib/cmake/* /usr/local/lib/cmake/
 
     - name: '⚙️ Save Qt Cache'
       if: env.INSTALL_QT_MACOS == 'true'
