@@ -573,14 +573,6 @@ jobs:
       with:
         submodules: 'recursive'
 
-    - name: '🔎 Check Available Qt Versions'
-      run: |
-        pip install aqtinstall
-        Write-Host "--- Stable Versions ---"
-        aqt list-qt windows desktop
-        Write-Host "--- Preview Versions ---"
-        aqt list-qt windows desktop --preview
-
     - name: '⚙️ Restore Qt Cache'
       uses: actions/cache/restore@v3
       if: env.INSTALL_QT_WINDOWS == 'false'
@@ -590,24 +582,33 @@ jobs:
           ${{env.USERPROFILE}}/.qt-license
         key: qt-${{runner.os}}-${{env.QT_VERSION_WINDOWS}}-x64-msvc2022_64
 
+    # - name: '⚙️ Install Qt'
+    #   shell: pwsh
+    #   if: env.INSTALL_QT_WINDOWS == 'true'
+    #   env:
+    #     QT_VERSION: ${{env.QT_VERSION_WINDOWS}}
+    #     QT_ARCH: x64
+    #     QT_USERNAME: ${{secrets.QT_USERNAME}}
+    #     QT_PASSWORD: ${{secrets.QT_PASSWORD}}
+    #     QT_OUTPUT_DIR: ${{github.workspace}}/Qt-${{env.QT_VERSION_WINDOWS}}-${{runner.os}}-x64
+    #   run: |
+    #     $INSTALL_PATH = "${{ github.workspace }}\Qt-6.10.2-Windows-x64"
+    #     if (!(Test-Path $INSTALL_PATH)) { New-Item -ItemType Directory -Path $INSTALL_PATH }
+    #       ./scripts/install-qt.ps1
+
     - name: '⚙️ Install Qt'
       shell: pwsh
       if: env.INSTALL_QT_WINDOWS == 'true'
       env:
         QT_VERSION: ${{env.QT_VERSION_WINDOWS}}
         QT_ARCH: x64
-        QT_USERNAME: ${{secrets.QT_USERNAME}}
-        QT_PASSWORD: ${{secrets.QT_PASSWORD}}
         QT_OUTPUT_DIR: ${{github.workspace}}/Qt-${{env.QT_VERSION_WINDOWS}}-${{runner.os}}-x64
       run: |
-        $INSTALL_PATH = "${{ github.workspace }}\Qt-6.10.2-Windows-x64"
+        $INSTALL_PATH = "$env:QT_OUTPUT_DIR"
         if (!(Test-Path $INSTALL_PATH)) { New-Item -ItemType Directory -Path $INSTALL_PATH }
-          ./scripts/install-qt.ps1 `
-          --accept-licenses `
-          --default-answer `
-          --confirm-command `
-          --auto-answer-telemetry `
-          --root "$INSTALL_PATH"
+        aqt install-qt windows desktop 6.10.2 win64_msvc2022_64 `
+          --outputdir "$INSTALL_PATH" `
+          -m qtcharts qt5compat qtmultimedia qtserialport
 
     - name: '⚙️ Save Qt Cache'
       if: env.INSTALL_QT_WINDOWS == 'true'
