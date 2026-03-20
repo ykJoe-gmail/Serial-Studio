@@ -144,13 +144,14 @@ jobs:
       if: env.INSTALL_QT_LINUX_INTEL == 'true'
       run: |
         pip install aqtinstall
-        # 路径必须和你后续 Add Qt to PATH 里的 QT_OUTPUT_DIR 完全一致
-        INSTALL_DIR="${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-x64"
-        mkdir -p "$INSTALL_DIR"
+        # 确保路径和你雷打不动的 Add Qt to PATH 变量一致
+        TARGET_PATH="${{ github.workspace }}/Qt-${{ env.QT_VERSION_LINUX }}-${{ runner.os }}-x64"
+        mkdir -p "$TARGET_PATH"
         
-        aqt install-qt linux desktop 6.10.2 gcc_64 --outputdir "$INSTALL_DIR" \
+        aqt install-qt linux desktop 6.10.2 gcc_64 --outputdir "$TARGET_PATH" \
           -m qtcharts qt5compat qtmultimedia qtserialport qtgraphs qtpositioning \
-             qtquick3d qtshadertools qtconnectivity qtwebengine qtwebchannel qtpdf
+             qtquick3d qtshadertools qtconnectivity qtwebengine qtwebchannel qtpdf \
+          --no-inventory || aqt install-qt linux desktop 6.10.2 gcc_64 --outputdir "$TARGET_PATH"
 
     - name: '🔍 Debug: Find Qt6Config.cmake (Linux)'
       shell: bash
