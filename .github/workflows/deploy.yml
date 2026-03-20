@@ -161,6 +161,20 @@ jobs:
           ${{env.USERPROFILE}}/.qt-license
         key: qt-${{runner.os}}-${{env.QT_VERSION_LINUX}}-x64
 
+    - name: '🔍 Debug: Find Qt6Config.cmake (Linux)'
+      shell: bash
+      if: env.INSTALL_QT_LINUX_INTEL == 'true'
+      run: |
+        echo "📂 Current Workspace: ${{ github.workspace }}"
+        echo "📂 Expected Root: ${{ github.workspace }}/Qt-${{ env.QT_VERSION_LINUX }}-${{ runner.os }}-x64"
+        
+        echo "--- 🔍 Searching for Qt6Config.cmake ---"
+        # 在整个 workspace 下寻找这个关键文件，看它到底躲在哪
+        find ${{ github.workspace }} -name "Qt6Config.cmake"
+        
+        echo "--- 📂 Directory Tree (Depth 4) ---"
+        find ${{ github.workspace }} -maxdepth 4 -not -path '*/.*'
+
     - name: '⚙️ Add Qt to PATH'
       shell: bash
       env:
@@ -489,6 +503,17 @@ jobs:
           ${{github.workspace}}/Qt-${{env.QT_VERSION_MACOS}}-${{runner.os}}-x64
           ${{env.USERPROFILE}}/.qt-license
         key: qt-${{runner.os}}-${{env.QT_VERSION_MACOS}}-x64
+
+    - name: '🔍 Debug: Find Qt6Config.cmake (macOS)'
+      shell: bash
+      if: env.INSTALL_QT_MACOS == 'true'
+      run: |
+        echo "📂 Current Workspace: ${{ github.workspace }}"
+        echo "--- 🔍 Searching for Qt6Config.cmake ---"
+        find ${{ github.workspace }} -name "Qt6Config.cmake"
+        
+        echo "--- 📂 Directory Tree (Depth 4) ---"
+        find ${{ github.workspace }} -maxdepth 4 -not -path '*/.*'
 
     - name: '⚙️ Add Qt to PATH'
       shell: bash
