@@ -573,6 +573,14 @@ jobs:
       with:
         submodules: 'recursive'
 
+    - name: '🔎 Check Available Qt Versions'
+      run: |
+        pip install aqtinstall
+        Write-Host "--- Stable Versions ---"
+        aqt list-qt windows desktop
+        Write-Host "--- Preview Versions ---"
+        aqt list-qt windows desktop --preview
+
     - name: '⚙️ Restore Qt Cache'
       uses: actions/cache/restore@v3
       if: env.INSTALL_QT_WINDOWS == 'false'
@@ -666,7 +674,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake ../ --debug-find `
+        cmake ../ `
           -DCMAKE_CXX_COMPILER=cl `
           -DCMAKE_C_COMPILER=cl `
           -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake" `
