@@ -592,7 +592,14 @@ jobs:
         QT_PASSWORD: ${{secrets.QT_PASSWORD}}
         QT_OUTPUT_DIR: ${{github.workspace}}/Qt-${{env.QT_VERSION_WINDOWS}}-${{runner.os}}-x64
       run: |
-        ./scripts/install-qt.ps1
+        $INSTALL_PATH = "${{ github.workspace }}\Qt-6.10.2-Windows-x64"
+        if (!(Test-Path $INSTALL_PATH)) { New-Item -ItemType Directory -Path $INSTALL_PATH }
+          ./scripts/install-qt.ps1 `
+          --accept-licenses `
+          --default-answer `
+          --confirm-command `
+          --auto-answer-telemetry `
+          --root "$INSTALL_PATH"
 
     - name: '⚙️ Save Qt Cache'
       if: env.INSTALL_QT_WINDOWS == 'true'
@@ -659,7 +666,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake ../ --debug-find`
+        cmake ../ --debug-find `
           -DCMAKE_CXX_COMPILER=cl `
           -DCMAKE_C_COMPILER=cl `
           -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake" `
