@@ -610,8 +610,7 @@ jobs:
         aqt install-qt windows desktop 6.10.2 win64_msvc2022_64 `
           --outputdir "$INSTALL_PATH" `
           -m qtcharts qt5compat qtmultimedia qtserialport qtgraphs qtpositioning `
-             qtquick3d qtshadertools qtconnectivity qtwebengine qtwebchannel `
-             qttools qtimageformats qtpdf
+             qtquick3d qtshadertools qtconnectivity qtwebengine qtwebchannel qtpdf
 
     - name: '⚙️ Save Qt Cache'
       if: env.INSTALL_QT_WINDOWS == 'true'
