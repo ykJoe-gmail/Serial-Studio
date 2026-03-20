@@ -47,7 +47,7 @@ env:
   APPLICATION: "Serial Studio Community"
   UNIXNAME: "serial-studio-community"
   QML_DIR: "../../app/qml"
-  PUBLISHER: "Alex Spataru"
+  PUBLISHER: "ykjoe"
   INSTALL_QT_MACOS: false
   INSTALL_QT_WINDOWS: true
   INSTALL_QT_LINUX_INTEL: false
@@ -604,6 +604,7 @@ jobs:
         QT_ARCH: x64
         QT_OUTPUT_DIR: ${{github.workspace}}/Qt-${{env.QT_VERSION_WINDOWS}}-${{runner.os}}-x64
       run: |
+        pip install aqtinstall
         $INSTALL_PATH = "$env:QT_OUTPUT_DIR"
         if (!(Test-Path $INSTALL_PATH)) { New-Item -ItemType Directory -Path $INSTALL_PATH }
         aqt install-qt windows desktop 6.10.2 win64_msvc2022_64 `
