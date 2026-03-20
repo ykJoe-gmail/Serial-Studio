@@ -152,7 +152,7 @@ jobs:
           -m qtcharts qt5compat qtmultimedia qtserialport qtgraphs qtpositioning \
              qtquick3d qtshadertools qtconnectivity qtwebengine qtwebchannel qtpdf
 
-      - name: '🔍 Debug: Find Qt6Config.cmake (Linux)'
+    - name: '🔍 Debug: Find Qt6Config.cmake (Linux)'
       shell: bash
       if: env.INSTALL_QT_LINUX_INTEL == 'true'
       run: |
@@ -514,7 +514,7 @@ jobs:
           ${{github.workspace}}/Qt-${{env.QT_VERSION_MACOS}}-${{runner.os}}-x64
           ${{env.USERPROFILE}}/.qt-license
         key: qt-${{runner.os}}-${{env.QT_VERSION_MACOS}}-x64
-        
+
     - name: '⚙️ Add Qt to PATH'
       shell: bash
       env:
