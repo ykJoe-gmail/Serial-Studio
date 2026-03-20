@@ -144,11 +144,11 @@ jobs:
       if: env.INSTALL_QT_LINUX_INTEL == 'true'
       run: |
         pip install aqtinstall
-        # 强制指定为你的环境变量定义的路径
-        QT_ROOT="${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-x64"
-        mkdir -p "$QT_ROOT"
+        # 路径必须和你后续 Add Qt to PATH 里的 QT_OUTPUT_DIR 完全一致
+        INSTALL_DIR="${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-x64"
+        mkdir -p "$INSTALL_DIR"
         
-        aqt install-qt linux desktop 6.10.2 gcc_64 --outputdir "$QT_ROOT" \
+        aqt install-qt linux desktop 6.10.2 gcc_64 --outputdir "$INSTALL_DIR" \
           -m qtcharts qt5compat qtmultimedia qtserialport qtgraphs qtpositioning \
              qtquick3d qtshadertools qtconnectivity qtwebengine qtwebchannel qtpdf
 
@@ -329,10 +329,10 @@ jobs:
       if: env.INSTALL_QT_LINUX_ARM64 == 'true'
       run: |
         pip install aqtinstall
-        QT_ROOT="${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-arm64"
-        mkdir -p "$QT_ROOT"
+        INSTALL_DIR="${{github.workspace}}/Qt-${{env.QT_VERSION_LINUX}}-${{runner.os}}-arm64"
+        mkdir -p "$INSTALL_DIR"
         
-        aqt install-qt linux desktop 6.10.2 gcc_arm64 --outputdir "$QT_ROOT" \
+        aqt install-qt linux desktop 6.10.2 gcc_arm64 --outputdir "$INSTALL_DIR" \
           -m qtcharts qt5compat qtmultimedia qtserialport qtgraphs qtpositioning \
              qtquick3d qtshadertools qtconnectivity qtwebengine qtwebchannel qtpdf
 
@@ -474,10 +474,10 @@ jobs:
       if: env.INSTALL_QT_MACOS == 'true'
       run: |
         pip install aqtinstall
-        QT_ROOT="${{github.workspace}}/Qt-${{env.QT_VERSION_MACOS}}-${{runner.os}}-x64"
-        mkdir -p "$QT_ROOT"
+        INSTALL_DIR="${{github.workspace}}/Qt-${{env.QT_VERSION_MACOS}}-${{runner.os}}-x64"
+        mkdir -p "$INSTALL_DIR"
         
-        aqt install-qt macos desktop 6.10.2 clang_64 --outputdir "$QT_ROOT" \
+        aqt install-qt macos desktop 6.10.2 clang_64 --outputdir "$INSTALL_DIR" \
           -m qtcharts qt5compat qtmultimedia qtserialport qtgraphs qtpositioning \
              qtquick3d qtshadertools qtconnectivity qtwebengine qtwebchannel qtpdf
 
