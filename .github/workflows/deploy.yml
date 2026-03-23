@@ -681,199 +681,199 @@ jobs:
         name: ${{env.EXECUTABLE}}-${{env.VERSION}}-macOS.dmg
         path: ${{env.EXECUTABLE}}-${{env.VERSION}}-macOS.dmg
 
-#-------------------------------------------------------------------------------
-# Windows build (MSVC 2022 x86_64)
-#-------------------------------------------------------------------------------
+# #-------------------------------------------------------------------------------
+# # Windows build (MSVC 2022 x86_64)
+# #-------------------------------------------------------------------------------
 
-  build-windows:
-    runs-on: windows-latest
-    name: '🧊 Windows'
-    steps:
-    - run: git config --global core.autocrlf input
-    - name: '🧰 Checkout'
-      uses: actions/checkout@v4
-      with:
-        submodules: 'recursive'
+#   build-windows:
+#     runs-on: windows-latest
+#     name: '🧊 Windows'
+#     steps:
+#     - run: git config --global core.autocrlf input
+#     - name: '🧰 Checkout'
+#       uses: actions/checkout@v4
+#       with:
+#         submodules: 'recursive'
 
-    - name: '⚙️ Restore Qt Cache'
-      uses: actions/cache/restore@v3
-      if: env.INSTALL_QT_WINDOWS == 'false'
-      with:
-        path: |
-          ${{github.workspace}}/Qt-${{env.QT_VERSION_WINDOWS}}-${{runner.os}}-x64
-          ${{env.USERPROFILE}}/.qt-license
-        key: qt-${{runner.os}}-${{env.QT_VERSION_WINDOWS}}-x64-msvc2022_64
+#     - name: '⚙️ Restore Qt Cache'
+#       uses: actions/cache/restore@v3
+#       if: env.INSTALL_QT_WINDOWS == 'false'
+#       with:
+#         path: |
+#           ${{github.workspace}}/Qt-${{env.QT_VERSION_WINDOWS}}-${{runner.os}}-x64
+#           ${{env.USERPROFILE}}/.qt-license
+#         key: qt-${{runner.os}}-${{env.QT_VERSION_WINDOWS}}-x64-msvc2022_64
 
-    # - name: '⚙️ Install Qt'
-    #   shell: pwsh
-    #   if: env.INSTALL_QT_WINDOWS == 'true'
-    #   env:
-    #     QT_VERSION: ${{env.QT_VERSION_WINDOWS}}
-    #     QT_ARCH: x64
-    #     QT_USERNAME: ${{secrets.QT_USERNAME}}
-    #     QT_PASSWORD: ${{secrets.QT_PASSWORD}}
-    #     QT_OUTPUT_DIR: ${{github.workspace}}/Qt-${{env.QT_VERSION_WINDOWS}}-${{runner.os}}-x64
-    #   run: |
-    #     $INSTALL_PATH = "${{ github.workspace }}\Qt-6.10.2-Windows-x64"
-    #     if (!(Test-Path $INSTALL_PATH)) { New-Item -ItemType Directory -Path $INSTALL_PATH }
-    #       ./scripts/install-qt.ps1
+#     # - name: '⚙️ Install Qt'
+#     #   shell: pwsh
+#     #   if: env.INSTALL_QT_WINDOWS == 'true'
+#     #   env:
+#     #     QT_VERSION: ${{env.QT_VERSION_WINDOWS}}
+#     #     QT_ARCH: x64
+#     #     QT_USERNAME: ${{secrets.QT_USERNAME}}
+#     #     QT_PASSWORD: ${{secrets.QT_PASSWORD}}
+#     #     QT_OUTPUT_DIR: ${{github.workspace}}/Qt-${{env.QT_VERSION_WINDOWS}}-${{runner.os}}-x64
+#     #   run: |
+#     #     $INSTALL_PATH = "${{ github.workspace }}\Qt-6.10.2-Windows-x64"
+#     #     if (!(Test-Path $INSTALL_PATH)) { New-Item -ItemType Directory -Path $INSTALL_PATH }
+#     #       ./scripts/install-qt.ps1
 
-    - name: '⚙️ Install Qt'
-      shell: pwsh
-      if: env.INSTALL_QT_WINDOWS == 'true'
-      env:
-        QT_VERSION: ${{env.QT_VERSION_WINDOWS}}
-        QT_ARCH: x64
-        QT_OUTPUT_DIR: ${{github.workspace}}/Qt-${{env.QT_VERSION_WINDOWS}}-${{runner.os}}-x64
-      run: |
-        pip install aqtinstall
-        $INSTALL_PATH = "$env:QT_OUTPUT_DIR"
-        if (!(Test-Path $INSTALL_PATH)) { New-Item -ItemType Directory -Path $INSTALL_PATH }
-        aqt install-qt windows desktop 6.10.2 win64_msvc2022_64 `
-          --outputdir "$INSTALL_PATH" `
-          -m qtcharts qt5compat qtmultimedia qtserialport qtgraphs qtpositioning `
-             qtquick3d qtshadertools qtconnectivity qtwebengine qtwebchannel qtpdf
+#     - name: '⚙️ Install Qt'
+#       shell: pwsh
+#       if: env.INSTALL_QT_WINDOWS == 'true'
+#       env:
+#         QT_VERSION: ${{env.QT_VERSION_WINDOWS}}
+#         QT_ARCH: x64
+#         QT_OUTPUT_DIR: ${{github.workspace}}/Qt-${{env.QT_VERSION_WINDOWS}}-${{runner.os}}-x64
+#       run: |
+#         pip install aqtinstall
+#         $INSTALL_PATH = "$env:QT_OUTPUT_DIR"
+#         if (!(Test-Path $INSTALL_PATH)) { New-Item -ItemType Directory -Path $INSTALL_PATH }
+#         aqt install-qt windows desktop 6.10.2 win64_msvc2022_64 `
+#           --outputdir "$INSTALL_PATH" `
+#           -m qtcharts qt5compat qtmultimedia qtserialport qtgraphs qtpositioning `
+#              qtquick3d qtshadertools qtconnectivity qtwebengine qtwebchannel qtpdf
 
-    - name: '⚙️ Save Qt Cache'
-      if: env.INSTALL_QT_WINDOWS == 'true'
-      uses: actions/cache/save@v3
-      with:
-        path: |
-          ${{github.workspace}}/Qt-${{env.QT_VERSION_WINDOWS}}-${{runner.os}}-x64
-          ${{env.USERPROFILE}}/.qt-license
-        key: qt-${{runner.os}}-${{env.QT_VERSION_WINDOWS}}-x64-msvc2022_64
+#     - name: '⚙️ Save Qt Cache'
+#       if: env.INSTALL_QT_WINDOWS == 'true'
+#       uses: actions/cache/save@v3
+#       with:
+#         path: |
+#           ${{github.workspace}}/Qt-${{env.QT_VERSION_WINDOWS}}-${{runner.os}}-x64
+#           ${{env.USERPROFILE}}/.qt-license
+#         key: qt-${{runner.os}}-${{env.QT_VERSION_WINDOWS}}-x64-msvc2022_64
 
-    - name: '⚙️ Add Qt to PATH'
-      shell: pwsh
-      env:
-        QT_VERSION: ${{env.QT_VERSION_WINDOWS}}
-        QT_OUTPUT_DIR: ${{github.workspace}}/Qt-${{env.QT_VERSION_WINDOWS}}-${{runner.os}}-x64
-      run: |
-        $QT_BIN_PATH = "$env:QT_OUTPUT_DIR\$env:QT_VERSION\msvc2022_64\bin"
-        $QT_LIBEXEC_PATH = "$env:QT_OUTPUT_DIR\$env:QT_VERSION\msvc2022_64\libexec"
-        $CMAKE_PREFIX_PATH = "$env:QT_OUTPUT_DIR\$env:QT_VERSION\msvc2022_64\lib\cmake"
+#     - name: '⚙️ Add Qt to PATH'
+#       shell: pwsh
+#       env:
+#         QT_VERSION: ${{env.QT_VERSION_WINDOWS}}
+#         QT_OUTPUT_DIR: ${{github.workspace}}/Qt-${{env.QT_VERSION_WINDOWS}}-${{runner.os}}-x64
+#       run: |
+#         $QT_BIN_PATH = "$env:QT_OUTPUT_DIR\$env:QT_VERSION\msvc2022_64\bin"
+#         $QT_LIBEXEC_PATH = "$env:QT_OUTPUT_DIR\$env:QT_VERSION\msvc2022_64\libexec"
+#         $CMAKE_PREFIX_PATH = "$env:QT_OUTPUT_DIR\$env:QT_VERSION\msvc2022_64\lib\cmake"
 
-        Write-Output "$QT_BIN_PATH" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-        Write-Output "$QT_LIBEXEC_PATH" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-        Write-Output "CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH" >> $env:GITHUB_ENV
+#         Write-Output "$QT_BIN_PATH" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+#         Write-Output "$QT_LIBEXEC_PATH" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+#         Write-Output "CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH" >> $env:GITHUB_ENV
 
-    - name: '⚙️ Install CMake'
-      uses: lukka/get-cmake@latest
-      with:
-        useLocalCache: true
+#     - name: '⚙️ Install CMake'
+#       uses: lukka/get-cmake@latest
+#       with:
+#         useLocalCache: true
 
-    - name: '🛠 Setup MSVC Development Environment'
-      uses: TheMrMilchmann/setup-msvc-dev@v3
-      with:
-        arch: x64
+#     - name: '🛠 Setup MSVC Development Environment'
+#       uses: TheMrMilchmann/setup-msvc-dev@v3
+#       with:
+#         arch: x64
 
-    - name: '🔍 Debug: Check Qt Directory Structure'
-      shell: pwsh
-      run: |
-        # 1. 打印当前环境变量中的路径
-        Write-Host "--- Environment Variables ---"
-        Write-Host "CMAKE_PREFIX_PATH: $env:CMAKE_PREFIX_PATH"
+#     - name: '🔍 Debug: Check Qt Directory Structure'
+#       shell: pwsh
+#       run: |
+#         # 1. 打印当前环境变量中的路径
+#         Write-Host "--- Environment Variables ---"
+#         Write-Host "CMAKE_PREFIX_PATH: $env:CMAKE_PREFIX_PATH"
         
-        # 2. 定义预期的 Qt 根目录
-        $EXPECTED_ROOT = "${{ github.workspace }}/Qt-${{ env.QT_VERSION_WINDOWS }}-Windows-x64"
-        Write-Host "--- Checking Directory: $EXPECTED_ROOT ---"
+#         # 2. 定义预期的 Qt 根目录
+#         $EXPECTED_ROOT = "${{ github.workspace }}/Qt-${{ env.QT_VERSION_WINDOWS }}-Windows-x64"
+#         Write-Host "--- Checking Directory: $EXPECTED_ROOT ---"
         
-        # 3. 检查目录是否存在并列出文件（递归 3 层）
-        if (Test-Path $EXPECTED_ROOT) {
-            Write-Host "✅ Root directory exists!"
-            # 列出该目录下的所有子目录，看看 6.10.2 在哪
-            Get-ChildItem -Path $EXPECTED_ROOT -Recurse -Depth 3 | Select-Object FullName
-        } else {
-            Write-Host "❌ Root directory NOT FOUND at $EXPECTED_ROOT"
-            # 如果没找到，看看 workspace 下到底有什么
-            Write-Host "Contents of workspace:"
-            Get-ChildItem -Path ${{ github.workspace }}
-        }
+#         # 3. 检查目录是否存在并列出文件（递归 3 层）
+#         if (Test-Path $EXPECTED_ROOT) {
+#             Write-Host "✅ Root directory exists!"
+#             # 列出该目录下的所有子目录，看看 6.10.2 在哪
+#             Get-ChildItem -Path $EXPECTED_ROOT -Recurse -Depth 3 | Select-Object FullName
+#         } else {
+#             Write-Host "❌ Root directory NOT FOUND at $EXPECTED_ROOT"
+#             # 如果没找到，看看 workspace 下到底有什么
+#             Write-Host "Contents of workspace:"
+#             Get-ChildItem -Path ${{ github.workspace }}
+#         }
 
-    - name: '🚧 Configure with CMake'
-      env:
-        ARCGIS_API_KEY: ${{secrets.ARCGIS_API_KEY}}
-        SERIAL_STUDIO_LICENSE_KEY: ${{secrets.SERIAL_STUDIO_LICENSE_KEY}}
-        SERIAL_STUDIO_INSTANCE_ID: ${{secrets.SERIAL_STUDIO_INSTANCE_ID}}
-        CMAKE_CONFIG_LOG: "1"
-      run: |
-        mkdir build
-        cd build
-        cmake ../ `
-          -DCMAKE_CXX_COMPILER=cl `
-          -DCMAKE_C_COMPILER=cl `
-          -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake" `
-          -DVCPKG_TARGET_TRIPLET=x64-windows-static `
-          -DPRODUCTION_OPTIMIZATION=ON `
-          -DENABLE_HARDENING=ON `
-          -DCMAKE_BUILD_TYPE=Release `
-          -DBUILD_COMMERCIAL=OFF `
-          -DBUILD_GPL3=ON `
-          -DSERIAL_STUDIO_LICENSE_KEY="${{ secrets.SERIAL_STUDIO_LICENSE_KEY }}" `
-          -DSERIAL_STUDIO_INSTANCE_ID="${{ secrets.SERIAL_STUDIO_INSTANCE_ID }}" `
-          -DARCGIS_API_KEY="${{ secrets.ARCGIS_API_KEY }}"
+#     - name: '🚧 Configure with CMake'
+#       env:
+#         ARCGIS_API_KEY: ${{secrets.ARCGIS_API_KEY}}
+#         SERIAL_STUDIO_LICENSE_KEY: ${{secrets.SERIAL_STUDIO_LICENSE_KEY}}
+#         SERIAL_STUDIO_INSTANCE_ID: ${{secrets.SERIAL_STUDIO_INSTANCE_ID}}
+#         CMAKE_CONFIG_LOG: "1"
+#       run: |
+#         mkdir build
+#         cd build
+#         cmake ../ `
+#           -DCMAKE_CXX_COMPILER=cl `
+#           -DCMAKE_C_COMPILER=cl `
+#           -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake" `
+#           -DVCPKG_TARGET_TRIPLET=x64-windows-static `
+#           -DPRODUCTION_OPTIMIZATION=ON `
+#           -DENABLE_HARDENING=ON `
+#           -DCMAKE_BUILD_TYPE=Release `
+#           -DBUILD_COMMERCIAL=OFF `
+#           -DBUILD_GPL3=ON `
+#           -DSERIAL_STUDIO_LICENSE_KEY="${{ secrets.SERIAL_STUDIO_LICENSE_KEY }}" `
+#           -DSERIAL_STUDIO_INSTANCE_ID="${{ secrets.SERIAL_STUDIO_INSTANCE_ID }}" `
+#           -DARCGIS_API_KEY="${{ secrets.ARCGIS_API_KEY }}"
 
-    - name: '🚧 Build application'
-      run: |
-        cd build
-        cmake --build . --config Release -j 16
+#     - name: '🚧 Build application'
+#       run: |
+#         cd build
+#         cmake --build . --config Release -j 16
 
-    - name: '⚙️ Add msbuild to PATH'
-      uses: microsoft/setup-msbuild@v2
+#     - name: '⚙️ Add msbuild to PATH'
+#       uses: microsoft/setup-msbuild@v2
 
-    - name: '⚙️ Install WiX'
-      run: dotnet tool install --global wix
+#     - name: '⚙️ Install WiX'
+#       run: dotnet tool install --global wix
 
-    - name: '📦 Create MSI installer'
-      run: |
-        cd build
-        cpack --verbose
-        mv *.msi ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows.msi
-        mv ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows.msi ../
+#     - name: '📦 Create MSI installer'
+#       run: |
+#         cd build
+#         cpack --verbose
+#         mv *.msi ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows.msi
+#         mv ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows.msi ../
 
-    - name: '📦 Create portable TGZ'
-      run: |
-        cd build
-        cpack -G TGZ
-        mv *.tar.gz ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows.tgz
+#     - name: '📦 Create portable TGZ'
+#       run: |
+#         cd build
+#         cpack -G TGZ
+#         mv *.tar.gz ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows.tgz
 
-    - name: '📦 Extract TGZ contents'
-      shell: bash
-      run: |
-        cd build
-        7z x ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows.tgz
-        7z x ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows.tar
-        DIRNAME=$(tar -tf ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows.tar 2>/dev/null | head -1 | cut -f1 -d"/" || true)
-        echo $DIRNAME > dirname.txt
-        cp ../app/deploy/windows/license.rtf ./License.rtf
+#     - name: '📦 Extract TGZ contents'
+#       shell: bash
+#       run: |
+#         cd build
+#         7z x ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows.tgz
+#         7z x ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows.tar
+#         DIRNAME=$(tar -tf ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows.tar 2>/dev/null | head -1 | cut -f1 -d"/" || true)
+#         echo $DIRNAME > dirname.txt
+#         cp ../app/deploy/windows/license.rtf ./License.rtf
 
-    - name: '📝 Create Windows batch launcher'
-      shell: bash
-      run: |
-        cd build
-        DIRNAME=$(cat dirname.txt)
-        echo "@echo off" > "${{env.APPLICATION}}.bat"
-        echo "start \"\" \"%~dp0${DIRNAME}\\bin\\${{env.EXECUTABLE}}.exe\"" >> "${{env.APPLICATION}}.bat"
+#     - name: '📝 Create Windows batch launcher'
+#       shell: bash
+#       run: |
+#         cd build
+#         DIRNAME=$(cat dirname.txt)
+#         echo "@echo off" > "${{env.APPLICATION}}.bat"
+#         echo "start \"\" \"%~dp0${DIRNAME}\\bin\\${{env.EXECUTABLE}}.exe\"" >> "${{env.APPLICATION}}.bat"
 
-    - name: '📦 Add files to ZIP'
-      shell: bash
-      run: |
-        cd build
-        DIRNAME=$(cat dirname.txt)
-        7z a ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows-Portable.zip "${{env.APPLICATION}}.bat" License.rtf $DIRNAME/*
-        mv ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows-Portable.zip ..
+#     - name: '📦 Add files to ZIP'
+#       shell: bash
+#       run: |
+#         cd build
+#         DIRNAME=$(cat dirname.txt)
+#         7z a ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows-Portable.zip "${{env.APPLICATION}}.bat" License.rtf $DIRNAME/*
+#         mv ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows-Portable.zip ..
 
-    - name: '📤 Upload artifact: MSI installer'
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows.msi
-        path: ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows.msi
+#     - name: '📤 Upload artifact: MSI installer'
+#       uses: actions/upload-artifact@v4
+#       with:
+#         name: ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows.msi
+#         path: ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows.msi
 
-    - name: '📤 Upload artifact: Portable ZIP'
-      uses: actions/upload-artifact@v4
-      with:
-       name: ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows-Portable
-       path: ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows-Portable.zip
+#     - name: '📤 Upload artifact: Portable ZIP'
+#       uses: actions/upload-artifact@v4
+#       with:
+#        name: ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows-Portable
+#        path: ${{env.EXECUTABLE}}-${{env.VERSION}}-Windows-Portable.zip
 
 #-------------------------------------------------------------------------------
 # Create release
@@ -884,7 +884,7 @@ jobs:
     needs:
       - build-macos
       # - build-linux
-      - build-windows
+      # - build-windows
       # - build-linux-arm64
 
     runs-on: ubuntu-latest
