@@ -176,6 +176,25 @@ jobs:
         find ${{ github.workspace }} -maxdepth 4 -not -path '*/.*'
         echo "=========================================================="
 
+    - name: '🕵️ 深度排查：Qt 到底去哪了？'
+      shell: bash
+      if: always()
+      run: |
+        echo "--- 📋 1. 确认 aqt 实际看到的版本详情 ---"
+        # 不加 quiet，看完整的版本解析
+        aqt list-qt linux desktop --arch 6.10.2
+        
+        echo "--- 📋 2. 检查 aqt 安装日志 (如果有) ---"
+        # 看看根目录下有没有 aqtinstall.log，有的报错会写在那
+        [ -f aqtinstall.log ] && cat aqtinstall.log || echo "No log file found."
+        
+        echo "--- 🔍 3. 全系统搜索 Qt6Config.cmake (无视路径) ---"
+        # 这一行如果还是空的，说明 aqt install 步骤 100% 失败了
+        sudo find / -name "Qt6Config.cmake" 2>/dev/null || echo "❌ 全盘搜索失败，Qt 根本没装上"
+        
+        echo "--- 📂 4. 检查当前目录下所有文件夹 (层级 2) ---"
+        ls -R | grep ":$" | head -n 20
+
     - name: '⚙️ Save Qt Cache'
       if: env.INSTALL_QT_LINUX_INTEL == 'true'
       uses: actions/cache/save@v3
